@@ -51,7 +51,7 @@ int main(int argc, char * const argv[]) {
 
 	srand(time(0));
 
-	int vertexs = 500;
+	int vertexs = 10;
 	float gestosc = 0.3;
 	const int powtorzenia = 10;
 	const int maxVertexs = 900;
@@ -60,6 +60,7 @@ int main(int argc, char * const argv[]) {
 	double czas = 0;
 	clock_t start, koniec;
 	GrafMacierz A;
+
 
 	/*plik << "Prim Macierz - 0.3" << endl;
 	while (vertexs<maxVertexs) {
@@ -226,6 +227,14 @@ int main(int argc, char * const argv[]) {
 	*/
 
 	GrafLista B;
+	short **tab = new short*[vertexs];
+	for (int i = 1; i<vertexs; i++)
+		tab[i] = new short[i];
+
+	losuj(tab, vertexs, gestosc);
+	B.wpiszGraf(tab, vertexs);
+	B.wypiszGraf();
+
 	/*
 	gestosc = 0.3;
 	vertexs = 500;
@@ -455,6 +464,7 @@ int main(int argc, char * const argv[]) {
 
 	plik.close();
 
+	system("PAUSE");
 	return 0;
 }
 

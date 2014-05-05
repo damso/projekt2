@@ -1,2 +1,0 @@
-Dijkstry Lista - 0.8
-500 1.748
