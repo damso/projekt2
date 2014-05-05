@@ -41,5 +41,11 @@
     <ClCompile Include="projekt2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GrafLista.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GrafMacierz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
