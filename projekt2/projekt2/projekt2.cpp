@@ -365,7 +365,7 @@ int main(int argc, char * const argv[]) {
 	czas = czas/powtorzenia;
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
-	}*/
+	}
 	
 	gestosc = 0.8;
 	czas = 0;
@@ -395,7 +395,7 @@ int main(int argc, char * const argv[]) {
 	vertexs += skok;
 	}
 	
-	/*
+	
 	gestosc = 0.3;
 	czas = 0;
 	vertexs = 500;
