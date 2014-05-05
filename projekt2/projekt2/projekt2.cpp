@@ -394,7 +394,7 @@ int main(int argc, char * const argv[]) {
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
 	}
-	
+	*
 	/*
 	gestosc = 0.3;
 	czas = 0;
