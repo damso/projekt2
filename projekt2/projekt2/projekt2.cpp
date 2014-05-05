@@ -366,7 +366,7 @@ int main(int argc, char * const argv[]) {
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
 	}*/
-	/*
+	
 	gestosc = 0.8;
 	czas = 0;
 	vertexs = 500;
@@ -394,8 +394,8 @@ int main(int argc, char * const argv[]) {
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
 	}
-	*/
-
+	
+	/*
 	gestosc = 0.3;
 	czas = 0;
 	vertexs = 500;
@@ -423,7 +423,7 @@ int main(int argc, char * const argv[]) {
 		plik << vertexs << " " << czas << endl;;
 		vertexs += skok;
 	}
-
+	
 	czas = 0;
 	gestosc = 0.8;
 	vertexs = 500;
@@ -451,7 +451,7 @@ int main(int argc, char * const argv[]) {
 		plik << vertexs << " " << czas << endl;;
 		vertexs += skok;
 	}
-
+	*/
 
 	plik.close();
 

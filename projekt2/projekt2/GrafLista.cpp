@@ -3,41 +3,49 @@
 #include <set>
 #include <vector>
 #include <algorithm>
-#include "GrafMacierz.h"
+#include "GrafLista.h"
 
 using namespace std;
 
-vector<short> waga;
-struct cmp
+vector<short> weight;
+struct cmp2
 {
 	bool operator() (const short &a, const short &b)
 	{
-		if (waga[a] < waga[b]) return true;
-		if (waga[a] > waga[b]) return false;
+		if (weight[a] < weight[b]) return true;
+		if (weight[a] > weight[b]) return false;
 		return a<b;
 	}
 };
 
-//Funkcje pomocnicze
-short* GrafMacierz::matrix(int x, int y) {
-	if (x>y)
-		return &macierz[x][y];
-	else
-		return &macierz[y][x];
+void GrafLista::ff(int k, int *wynik, bool *change)
+{
+	short max = 32767;
+	//int i;
+	for (size_t i = 0; i < lista[k].size(); ++i)
+	{
+		if (lista[k][i].second != 0)
+		if ((lista[k][i].second + wynik[k] < max) & (wynik[k] + lista[k][i].second < wynik[lista[k][i].first]))
+		{
+			wynik[lista[k][i].first] = wynik[k] + lista[k][i].second; change[lista[k][i].first] = true;
+		}
+	}
 }
 
-short GrafMacierz::Find(short a, short *tab) {
-	if (tab[a] == a) return a;
+
+short GrafLista::Find(short a, short *tab) {
+	if (tab[a] == a) return a; // jesli a jest reprezentantem zbioru zawierajacego a to zwracamy a
+	// W przeciwnym wypadku pytamy sie kto jest reprezentantem zbioru zawierajacego tab[a], bo w koncu to ten sam zbior :-)
 	short fa = Find(tab[a], tab);
-	tab[a] = fa;
+	tab[a] = fa; // zaktualizujmy wartosc tab[a] na nowszą!, w razie czego, gdyby ktoś się pytał kiedyś jeszcze raz o find(a)
 	return fa;
 }
 
-bool GrafMacierz::Union(short a, short b, short *tab, short *liczebnosc) {
-	short fa = Find(a, tab);
-	short fb = Find(b, tab);
+bool GrafLista::Union(short a, short b, short *tab, short *liczebnosc) {
+	short fa = Find(a, tab); // szukaj reprezentanta zbioru zawierającego element 'a'
+	short fb = Find(b, tab); // szukaj reprezentanta zbioru zawierającego element 'b'
 
-	if (fa == fb) return false;
+	if (fa == fb) return false; // nie trzeba nic łączyć
 	if (liczebnosc[fa] <= liczebnosc[fb])
 	{
 		liczebnosc[fb] += liczebnosc[fa];
@@ -51,89 +59,83 @@ bool GrafMacierz::Union(short a, short b, short *tab, short *liczebnosc) {
 	return true;
 }
 
-
-//Gettery i Settery
-void GrafMacierz::wpiszGraf(short **inputTab, int size) {
-	vertexs = size;
-	macierz = new short*[vertexs];
-	for (int i = 1; i<vertexs; i++)
-		macierz[i] = new short[i];
-
-	for (int x = 1; x<vertexs; x++)
-	for (int y = 0; y<x; y++)
-		*(matrix(x, y)) = inputTab[x][y];
+void GrafLista::wpiszGraf(short **inputTab, int size) {
+	lista.resize(size);
+	for (int x = 1; x<size; x++)
+	for (int y = 0; y<x; y++) {
+		if (inputTab[x][y] != 0) {
+			lista[x].push_back(make_pair(y, inputTab[x][y]));
+			lista[y].push_back(make_pair(x, inputTab[x][y]));
+		}
+	}
 	//wypiszGraf();
 }
 
-void GrafMacierz::wypiszGraf() {
-	for (int x = 1; x<vertexs; x++){
-		for (int y = 0; y<x; y++)
-			std::cout << macierz[x][y] << " ";
-		std::cout << std::endl;
-	}
+void GrafLista::wypiszGraf() {
+	for (size_t x = 0; x<lista.size(); x++)
+	for (size_t y = 0; y<lista[x].size(); y++)
+		cout << x << " " << lista[x][y].first << " " << lista[x][y].second << endl;
 }
 
-
-//Algorytmy
-int GrafMacierz::Prim() {
-	set<short, cmp> kopiec2;
-	vector<short> pi(vertexs);
-	vector<bool> visited(vertexs, false);
+int GrafLista::Prim() {
+	set<short, cmp2> kopiec;
+	vector<short> pi(lista.size());
+	vector<bool> visited(lista.size(), false);
 
 	short MAX = 32767;
-	waga.resize(vertexs, MAX);
+	weight.resize(lista.size(), MAX);
 
 	pi[0] = 0;
-	waga[0] = 0;
+	weight[0] = 0;
 
-	for (short i = 0; i<vertexs; i++)
-		kopiec2.insert(i);
+	for (size_t i = 0; i<lista.size(); i++)
+		kopiec.insert(i);
 
 	int suma = 0;
-	while (kopiec2.empty() == false)
+	while (kopiec.empty() == false)
 	{
-		short min = *(kopiec2.begin());
-		suma += waga[min];
-		kopiec2.erase(kopiec2.begin());
+		short min = *(kopiec.begin());
+		suma += weight[min];
+		kopiec.erase(kopiec.begin());
 		visited[min] = true;
 
-		for (int i = 0; i<vertexs; i++)
-		if (min != i && (*matrix(min, i) != 0))
-		if (visited[i] == false)
-		if (*matrix(min, i) < waga[i])	{
-			kopiec2.erase(kopiec2.find(i));
-			waga[i] = *matrix(min, i);
-			kopiec2.insert(i);
-			pi[i] = min;
+		for (size_t i = 0; i<lista[min].size(); i++)
+		if (visited[lista[min][i].first] == false)
+		if (lista[min][i].second < weight[lista[min][i].first]) {
+			kopiec.erase(kopiec.find(lista[min][i].first));
+			weight[lista[min][i].first] = lista[min][i].second;
+			kopiec.insert(lista[min][i].first);
+			pi[lista[min][i].first] = min;
 		}
+
 	}
 
 	return suma;
 }
 
-int GrafMacierz::Kruskal() {
-	vector< pair< short, pair<short, short> > > krawedzie;
-	for (int x = 1; x<vertexs; x++)
-	for (int y = 0; y<x; y++)
-	if (*(matrix(x, y)) != 0)
-		krawedzie.push_back(make_pair(*matrix(x, y), make_pair(x, y)));
+int GrafLista::Kruskal() {
+	vector< pair< short, pair<short, short> > >krawedzie;
+	for (size_t x = 0; x<lista.size(); x++)
+	for (size_t y = 0; y<lista[x].size(); y++) {
+		krawedzie.push_back(make_pair(lista[x][y].second, make_pair(x, lista[x][y].first)));
+	}
 
 	sort(krawedzie.begin(), krawedzie.end());
 
 	vector< pair<short, short> > MST;
 
-	short *helpVec = new short[vertexs];
-	short *liczebnosc = new short[vertexs];
+	short *helpVec = new short[lista.size()];
+	short *liczebnosc = new short[lista.size()];
 
-	for (int i = 0; i<vertexs; i++) {
+	for (size_t i = 0; i<lista.size(); i++) {
 		helpVec[i] = i;
 		liczebnosc[i] = 1;
 	}
 
 	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin();
 
-	int licznik = 0, suma = 0;
-	while (licznik<vertexs - 1) {
+	size_t licznik = 0, suma = 0;
+	while (licznik<lista.size() - 1) {
 		if (Union((*it).second.first, (*it).second.second, helpVec, liczebnosc) == true) {
 			MST.push_back(make_pair((*it).second.first, (*it).second.second));
 			licznik++;
@@ -145,90 +147,64 @@ int GrafMacierz::Kruskal() {
 	return suma;
 }
 
-vector<short> GrafMacierz::Dijkstry() {
-	set<int, cmp> kopiec2;
-	vector<short> pi(vertexs);
-	vector<bool> visited(vertexs, false);
+vector<short> GrafLista::Dijkstry() {
+
+	set<short, cmp2> kopiec;
+	vector<short> pi(lista.size());
+	vector<bool> visited(lista.size(), false);
 
 	short MAX = 32767;
-	waga.resize(vertexs, MAX);
+	weight.resize(lista.size(), MAX);
 
 	pi[0] = 0;
-	waga[0] = 0;
+	weight[0] = 0;
 
-	for (short i = 0; i<vertexs; i++)
-		kopiec2.insert(i);
+	for (size_t i = 0; i<lista.size(); i++)
+		kopiec.insert(i);
 
-	while (kopiec2.empty() == false)
+	int suma = 0;
+	while (kopiec.empty() == false)
 	{
-		short min = *(kopiec2.begin());
-		kopiec2.erase(kopiec2.begin());
+		short min = *(kopiec.begin());
+		suma += weight[min];
+		kopiec.erase(kopiec.begin());
 		visited[min] = true;
 
-		for (int i = 0; i<vertexs; i++)
-		if (min != i && (*matrix(min, i) != 0))
-		if (visited[i] == false)
-		if ((*matrix(min, i) + waga[min]) < waga[i])	{
-			kopiec2.erase(kopiec2.find(i));
-			waga[i] = *matrix(min, i) + waga[min];
-			kopiec2.insert(i);
-			pi[i] = min;
+		for (size_t i = 0; i<lista[min].size(); i++)
+		if (visited[lista[min][i].first] == false)
+		if ((lista[min][i].second + weight[min]) < weight[lista[min][i].first]) {
+			kopiec.erase(kopiec.find(lista[min][i].first));
+			weight[lista[min][i].first] = weight[min] + lista[min][i].second;
+			kopiec.insert(lista[min][i].first);
+			pi[lista[min][i].first] = min;
 		}
+
 	}
 
 	return pi;
-
 }
 
-int GrafMacierz::FordBellman(int iloscKr) {
-	vector<int>D;
-	vector< vector<int> > E;
-
-	int iloscK = iloscKr * 2;
-	const int MAX_INT = 1000;
-	int s = 1;
-
-	E.resize(iloscK);
-
-	int i = 0;
-	for (int x = 0; x<vertexs; x++)
+void GrafLista::FordBellman() {
+	short max = 32767;
+	int n, *wynik;
+	bool *change, end=true;
+	n = lista.size();
+	wynik = new int[n];
+	change = new bool[n];
+	wynik[0] = 0;
+	for (size_t i = 1; i < lista.size(); ++i)
 	{
-		for (int y = 0; y<vertexs; y++)
+		wynik[i] = max; change[i] = false;
+	}
+	ff(0, wynik, change);
+	while (end == false)
+	{
+		end = true;
+		for (int k = 0; k < n; ++k)
+		if (change[k] == true)
 		{
-			if (x != y)
-			if (*matrix(x, y) != 0)
-			{
-				E[i].reserve(3);
-				E[i][0] = y + 1;
-				E[i][1] = x + 1;
-				E[i][2] = *matrix(x, y);
-				i++;
-			}
-
+			ff(k, wynik, change); change[k] = false; end = false;
 		}
 	}
-
-	D.resize(vertexs);
-
-	for (int i = 1; i < vertexs; i++) D[i] = MAX_INT; //D jest tablicą, w której trzymamy "koszt" dotarcia do danego wierzchołka z wierzchołka s. Na początku zakładamy, że dotarcie do reszty wierzchołków jest bardzo drogie
-	D[s] = 0; //ale do wierzchołka s możemy dostać się za darmo
-	for (int i = 1; i <= vertexs; i++)
-	{
-		for (int j = 0; j < iloscK; j++)
-		{
-			int a = E[j][0], b = E[j][1], c = E[j][2];
-			if (D[a] != MAX_INT && D[a] < D[b] - c) //jeżeli koszt dotarcia do poprzedniego wierzchołka (+7) jest mniejszy niż koszt dostanie się do aktualnego wierzchołka
-			{
-				D[b] = D[a] + c; //to zamieniamy wartości. Należy pamiętać, aby do wartości z wierzchołka poprzedzającego dodać koszt przejścia po krawędzi do aktualnego wierzchołka
-
-				if (i == vertexs) // jeżeli i dojdzie do n i wejdzie do tej pętli znaczy, że odkryliśmy cykl o ujemnej wadze
-				{
-					printf("NIE"); //więc program powinien na so tym poinformować i skończyć swoje działanie
-					return 0;
-				}
-			}
-		}
-	}
-
-	return 0;
+	delete[]wynik; delete[]change;
 }
