@@ -13,11 +13,35 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Wyniki">
+      <UniqueIdentifier>{606124ac-e7e1-4ef5-a97a-92b2033637cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="Dane.txt">
       <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\DijkstryMacierz.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\DijkstrzLista.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\FordMacierz.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\KruskalLista.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\KruskalMacierz.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\PrimLista.txt">
+      <Filter>Source Files\Wyniki</Filter>
+    </Text>
+    <Text Include="..\..\Wyniki\PrimMacierz.txt">
+      <Filter>Source Files\Wyniki</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -51,18 +51,19 @@ int main(int argc, char * const argv[]) {
 
 	srand(time(0));
 
-	int vertexs = 10;
-	float gestosc = 0.3;
-	const int powtorzenia = 10;
-	const int maxVertexs = 900;
+	int vertexs = 200;
+	float gestosc = 0.5;
+	const int powtorzenia = 2;
+	const int maxVertexs = 3000;
 	const int skok = 200;
 
 	double czas = 0;
 	clock_t start, koniec;
 	GrafMacierz A;
 
-
-	/*plik << "Prim Macierz - 0.3" << endl;
+	
+	/*
+	plik << "Prim Macierz - 0.9" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
@@ -87,9 +88,13 @@ int main(int argc, char * const argv[]) {
 	vertexs += skok;
 	}
 
+
+	/*
 	czas = 0;
 	vertexs = 500;
-	plik << "Kruskal Macierz - 0.3" << endl;
+
+	
+	plik << "Kruskal Macierz - 0.9" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
@@ -116,91 +121,8 @@ int main(int argc, char * const argv[]) {
 
 	czas = 0;
 	vertexs = 500;
-	plik << "Dijkstry Macierz - 0.3" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
 
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Dijkstry();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-
-
-
-	vertexs = 500;
-	gestosc = 0.8;
-	czas = 0;
-	plik << "Prim Macierz - 0.8" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Prim();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-
-	czas = 0;
-	vertexs = 500;
-	plik << "Kruskal Macierz - 0.8" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Kruskal();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-
-	czas = 0;
-	vertexs = 500;
-	plik << "Dijkstry Macierz- 0.8" << endl;
+	plik << "Dijkstry Macierz - 0.9" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
@@ -225,21 +147,11 @@ int main(int argc, char * const argv[]) {
 	vertexs += skok;
 	}
 	*/
-
+	
 	GrafLista B;
-	short **tab = new short*[vertexs];
-	for (int i = 1; i<vertexs; i++)
-		tab[i] = new short[i];
-
-	losuj(tab, vertexs, gestosc);
-	B.wpiszGraf(tab, vertexs);
-	B.wypiszGraf();
 
 	/*
-	gestosc = 0.3;
-	vertexs = 500;
-	czas = 0;
-	plik << "Prim Lista - 0.3" << endl;
+	plik << "Prim Lista - 0.9" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
@@ -262,12 +174,13 @@ int main(int argc, char * const argv[]) {
 	czas = czas/powtorzenia;
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
-	}*/
+	}
 
-	/*
+	
 	czas = 0;
 	vertexs = 500;
-	plik << "Kruskal Lista - 0.3" << endl;
+	
+	plik << "Kruskal Lista - 0.9" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
@@ -291,9 +204,10 @@ int main(int argc, char * const argv[]) {
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
 	}
-	*/
+	
 	/*	czas = 0;
 	vertexs = 500;
+
 	plik << "Dijkstry Lista - 0.3" << endl;
 	while (vertexs<maxVertexs) {
 	for (int i=0; i<powtorzenia; i++) {
@@ -318,97 +232,15 @@ int main(int argc, char * const argv[]) {
 	plik << vertexs << " " << czas << endl;;
 	vertexs += skok;
 	}
-	*/
-	/*
-	czas = 0;
-	gestosc = 0.8;
-	vertexs = 500;
-	plik << "Prim Lista - 0.8" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Prim();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-	*/
-	/*
-	czas = 0;
-	vertexs = 500;
-	plik << "Kruskal Lista - 0.8" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Kruskal();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
 	
-	gestosc = 0.8;
-	czas = 0;
-	vertexs = 500;
-	plik << "Dijkstry Lista - 0.8" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
 
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Dijkstry();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-	
-	/*
 	gestosc = 0.3;
 	czas = 0;
 	vertexs = 500;
-	plik << "Ford Belmann Macierz - 0.3" << endl;
+	
+	*/
+
+	plik << "Ford Belmann Macierz - 0.5" << endl;
 	while (vertexs<maxVertexs) {
 		for (int i = 0; i<powtorzenia; i++) {
 			short **tab = new short*[vertexs];
@@ -433,6 +265,7 @@ int main(int argc, char * const argv[]) {
 		vertexs += skok;
 	}
 	
+	/*
 	czas = 0;
 	gestosc = 0.8;
 	vertexs = 500;

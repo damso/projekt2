@@ -76,6 +76,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="..\..\Wyniki\DijkstryMacierz.txt" />
+    <Text Include="..\..\Wyniki\DijkstrzLista.txt" />
+    <Text Include="..\..\Wyniki\FordMacierz.txt" />
+    <Text Include="..\..\Wyniki\KruskalLista.txt" />
+    <Text Include="..\..\Wyniki\KruskalMacierz.txt" />
+    <Text Include="..\..\Wyniki\PrimLista.txt" />
+    <Text Include="..\..\Wyniki\PrimMacierz.txt" />
     <Text Include="Dane.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
