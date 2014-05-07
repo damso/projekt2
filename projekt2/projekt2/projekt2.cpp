@@ -8,6 +8,7 @@
 #include "GrafLista.h"
 #include <fstream>
 #include <time.h>
+#include <conio.h>
 
 using namespace std;
 
@@ -44,22 +45,135 @@ int losuj(short **tab, int vertexs, float density){
 	return edgesTemp;
 }
 
+void menuGlowne();
+void menuMacierz();
+void menuLista();
+
+void menuGlowne(){
+	int wybor;
+	system("cls");
+	cout << "******* MENU GLOWNE *******" << endl
+		<< "----------------------------" << endl
+		<< "1. Reprezentacja macierzowa" << endl
+		<< "2. Reprezantacja listowa" << endl
+		<< "0. Zakoncz" << endl
+		<< "----------------------------" << endl;
+
+	wybor = _getch();
+	switch (wybor){
+	case '1':
+		menuMacierz();
+	case '2':
+		menuLista();
+	case '0':
+		exit(0);
+	default:
+		menuGlowne();
+	}
+}
+
+void menuMacierz(){
+	int wybor;
+	system("cls");
+	cout << "******* MENU REPREZENTACJI MACIERZOWEJ *******\n"
+		<< "-----------------------------------------------\n"
+		<< "1. Wczytaj z pliku\n"
+		<< "2. Wygeneruj graf losowo\n"
+		<< "3. Wyswietl graf\n"
+		<< "4. Algorytm Prima\n"
+		<< "5. Algorytm Kruskala\n"
+		<< "6. Algorytm Dijkstry\n"
+		<< "7. Algorytm Forda-Bellmana\n"
+		<< "8. Powrot do menu glownego\n"
+		<< "0. Zakoncz\n"
+		<< "-----------------------------------------------\n";
+
+	wybor = _getch();
+	switch (wybor){
+	case '1':
+		//tutaj jaka funkcja, ktora wczyta graf z pliku
+	case '2':
+		//generowanie losowe
+	case '3':
+		//wyswietlenie grafu
+	case '4':
+		//prim
+	case '5':
+		//kruskal
+	case '6':
+		//dijsktra
+	case '7':
+		//ford-bellman
+	case '8':
+		menuGlowne();
+	case '0':
+		exit(0);
+	default:
+		menuMacierz();
+	}
+}
+
+void menuLista(){
+	int wybor;
+	system("cls");
+	cout << "******* MENU REPREZENTACJI LISTOWEJ *******\n"
+		<< "-----------------------------------------------\n"
+		<< "1. Wczytaj z pliku\n"
+		<< "2. Wygeneruj graf losowo\n"
+		<< "3. Wyswietl graf\n"
+		<< "4. Algorytm Prima\n"
+		<< "5. Algorytm Kruskala\n"
+		<< "6. Algorytm Dijkstry\n"
+		<< "7. Algorytm Forda-Bellmana\n"
+		<< "8. Powrot do menu glownego\n"
+		<< "0. Zakoncz\n"
+		<< "-----------------------------------------------\n";
+
+	wybor = _getch();
+	switch (wybor){
+	case '1':
+		//tutaj jaka funkcja, ktora wczyta graf z pliku
+	case '2':
+		//generowanie losowe
+	case '3':
+		//wyswietlenie grafu
+	case '4':
+		//prim
+	case '5':
+		//kruskal
+	case '6':
+		//dijsktra
+	case '7':
+		//ford-bellman
+	case '8':
+		menuGlowne();
+	case '0':
+		exit(0);
+	default:
+		menuLista();
+	}
+}
+
 int main(int argc, char * const argv[]) {
 
-	ofstream plik;
-	plik.open("Dane.txt", ios::out);
+	menuGlowne();
 
-	srand(time(0));
 
-	int vertexs = 200;
-	float gestosc = 0.5;
-	const int powtorzenia = 2;
-	const int maxVertexs = 3000;
-	const int skok = 200;
+	//ofstream plik;
+	//plik.open("Dane.txt", ios::out);
 
-	double czas = 0;
-	clock_t start, koniec;
-	GrafMacierz A;
+	//srand(time(0));
+
+	//int vertexs = 200;
+	//float gestosc = 0.5;
+	//const int powtorzenia = 2;
+	//const int maxVertexs = 3000;
+	//const int skok = 200;
+
+	//double czas = 0;
+	//clock_t start, koniec;
+	//GrafMacierz A;
+
 
 	
 	/*
@@ -238,7 +352,7 @@ int main(int argc, char * const argv[]) {
 	czas = 0;
 	vertexs = 500;
 	
-	*/
+	
 
 	plik << "Ford Belmann Macierz - 0.5" << endl;
 	while (vertexs<maxVertexs) {
@@ -265,7 +379,7 @@ int main(int argc, char * const argv[]) {
 		vertexs += skok;
 	}
 	
-	/*
+	
 	czas = 0;
 	gestosc = 0.8;
 	vertexs = 500;
@@ -295,7 +409,7 @@ int main(int argc, char * const argv[]) {
 	}
 	*/
 
-	plik.close();
+	//plik.close();
 
 	system("PAUSE");
 	return 0;
