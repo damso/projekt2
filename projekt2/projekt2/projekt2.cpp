@@ -77,7 +77,7 @@ int vertexs = 5;
 float gestosc = 0.3;
 short **tab = new short*[vertexs];
 void menuMacierz(){
-	for (int i = 1; i<vertexs; i++)
+	for (int i = 1; i < vertexs; i++)
 		tab[i] = new short[i];
 	int wybor;
 	system("cls");
@@ -135,6 +135,8 @@ void menuMacierz(){
 
 GrafLista B;
 void menuLista(){
+	for (int i = 1; i < vertexs; i++)
+		tab[i] = new short[i];
 	int wybor;
 	system("cls");
 	cout << "******* MENU REPREZENTACJI LISTOWEJ *******\n"
@@ -156,16 +158,30 @@ void menuLista(){
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
 	case '2':
 		//generowanie losowe
+		krawedzie = losuj(tab, vertexs, gestosc);
+		B.wpiszGraf(tab, vertexs);
+		menuLista();
 	case '3':
 		//wyswietlenie grafu
+		B.wypiszGraf();
+		system("pause");
+		menuLista();
 	case '4':
 		//prim
+		B.Prim();
+		menuLista();
 	case '5':
 		//kruskal
+		B.Kruskal();
+		menuLista();
 	case '6':
 		//dijsktra
+		B.Dijkstry();
+		menuLista();
 	case '7':
 		//ford-bellman
+		B.FordBellman();
+		menuLista();
 	case '8':
 		menuGlowne();
 	case '0':
