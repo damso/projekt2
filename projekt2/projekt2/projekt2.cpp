@@ -71,8 +71,14 @@ void menuGlowne(){
 		menuGlowne();
 	}
 }
-
+GrafMacierz A;
+int krawedzie;
+int vertexs = 5;
+float gestosc = 0.3;
+short **tab = new short*[vertexs];
 void menuMacierz(){
+	for (int i = 1; i<vertexs; i++)
+		tab[i] = new short[i];
 	int wybor;
 	system("cls");
 	cout << "******* MENU REPREZENTACJI MACIERZOWEJ *******\n"
@@ -94,16 +100,30 @@ void menuMacierz(){
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
 	case '2':
 		//generowanie losowe
+		krawedzie = losuj(tab, vertexs, gestosc);
+		A.wpiszGraf(tab, vertexs);
+		menuMacierz();
 	case '3':
 		//wyswietlenie grafu
+		A.wypiszGraf();
+		system("pause");
+		menuMacierz();
 	case '4':
 		//prim
+		A.Prim();
+		menuMacierz();
 	case '5':
 		//kruskal
+		A.Kruskal();
+		menuMacierz();
 	case '6':
 		//dijsktra
+		A.Dijkstry();
+		menuMacierz();
 	case '7':
 		//ford-bellman
+		//A.FordBellman(krawedzie);
+		menuMacierz();
 	case '8':
 		menuGlowne();
 	case '0':
@@ -113,6 +133,7 @@ void menuMacierz(){
 	}
 }
 
+GrafLista B;
 void menuLista(){
 	int wybor;
 	system("cls");
@@ -167,7 +188,7 @@ int main(int argc, char * const argv[]) {
 	//int vertexs = 200;
 	//float gestosc = 0.5;
 	//const int powtorzenia = 2;
-	//const int maxVertexs = 3000;
+	//const int maxvertexs = 3000;
 	//const int skok = 200;
 
 	//double czas = 0;
@@ -178,28 +199,28 @@ int main(int argc, char * const argv[]) {
 	
 	/*
 	plik << "Prim Macierz - 0.9" << endl;
-	while (vertexs<maxVertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
+	while (vertexs<maxvertexs) {
+		for (int i=0; i<powtorzenia; i++) {
+			short **tab = new short*[vertexs];
+			for (int i=1; i<vertexs; i++)
+				tab[i] = new short[i];
 
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Prim();
-	koniec = clock();
+			losuj(tab,vertexs,gestosc);
+			A.wpiszGraf(tab,vertexs);
+			start = clock();
+			A.Prim();
+			koniec = clock();
 
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
+			for (int i=1; i<vertexs; i++) {
+				delete [] tab[i];
+			}
+			delete [] tab;
 
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
+			czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
+		}
+		czas = czas/powtorzenia;
+		plik << vertexs << " " << czas << endl;;
+		vertexs += skok;
 	}
 
 
@@ -209,7 +230,7 @@ int main(int argc, char * const argv[]) {
 
 	
 	plik << "Kruskal Macierz - 0.9" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
 	for (int i=1; i<vertexs; i++)
@@ -237,7 +258,7 @@ int main(int argc, char * const argv[]) {
 	vertexs = 500;
 
 	plik << "Dijkstry Macierz - 0.9" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
 	for (int i=1; i<vertexs; i++)
@@ -266,7 +287,7 @@ int main(int argc, char * const argv[]) {
 
 	/*
 	plik << "Prim Lista - 0.9" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
 	for (int i=1; i<vertexs; i++)
@@ -295,7 +316,7 @@ int main(int argc, char * const argv[]) {
 	vertexs = 500;
 	
 	plik << "Kruskal Lista - 0.9" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
 	for (int i=1; i<vertexs; i++)
@@ -323,7 +344,7 @@ int main(int argc, char * const argv[]) {
 	vertexs = 500;
 
 	plik << "Dijkstry Lista - 0.3" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 	for (int i=0; i<powtorzenia; i++) {
 	short **tab = new short*[vertexs];
 	for (int i=1; i<vertexs; i++)
@@ -355,7 +376,7 @@ int main(int argc, char * const argv[]) {
 	
 
 	plik << "Ford Belmann Macierz - 0.5" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 		for (int i = 0; i<powtorzenia; i++) {
 			short **tab = new short*[vertexs];
 			for (int i = 1; i<vertexs; i++)
@@ -384,7 +405,7 @@ int main(int argc, char * const argv[]) {
 	gestosc = 0.8;
 	vertexs = 500;
 	plik << "Ford Belmann Macierz - 0.8" << endl;
-	while (vertexs<maxVertexs) {
+	while (vertexs<maxvertexs) {
 		for (int i = 0; i<4; i++) {
 			short **tab = new short*[vertexs];
 			for (int i = 1; i<vertexs; i++)
