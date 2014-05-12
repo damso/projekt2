@@ -8,7 +8,7 @@
 using namespace std;
 
 vector<short> waga;
-struct cmp
+struct cmpMacierz
 {
 	bool operator() (const short &a, const short &b)
 	{
@@ -65,14 +65,14 @@ void GrafMacierz::wpiszGraf(short **inputTab, int size) {
 void GrafMacierz::wypiszGraf() {
 	for (int x = 1; x < wierzcholki; x++){
 		for (int y = 0; y < x; y++)
-			std::cout << macierz[x][y] << " ";
+			cout << macierz[x][y] + 1<< " ";
 		cout << endl;
 	}
 }
 
 //zaimplementowane algorytmy
 int GrafMacierz::Prim() {
-	set<short, cmp> kopiecMacierz;
+	set<short, cmpMacierz> kopiecMacierz;
 	vector<short> pi(wierzcholki);
 	vector<bool> odwiedzone(wierzcholki, false);
 
@@ -112,8 +112,8 @@ int GrafMacierz::Prim() {
 
 int GrafMacierz::Kruskal() {
 	vector< pair< short, pair<short, short> > > krawedzie;
-	for (int x = 1; x<wierzcholki; x++)
-	for (int y = 0; y<x; y++)
+	for (int x = 1; x < wierzcholki; x++)
+	for (int y = 0; y < x; y++)
 	if (*(matrix(x, y)) != 0)
 		krawedzie.push_back(make_pair(*matrix(x, y), make_pair(x, y)));
 
@@ -124,7 +124,7 @@ int GrafMacierz::Kruskal() {
 	short *helpVec = new short[wierzcholki];
 	short *liczebnosc = new short[wierzcholki];
 
-	for (int i = 0; i<wierzcholki; i++) {
+	for (int i = 0; i < wierzcholki; i++) {
 		helpVec[i] = i;
 		liczebnosc[i] = 1;
 	}
@@ -132,7 +132,7 @@ int GrafMacierz::Kruskal() {
 	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin();
 
 	int licznik = 0, suma = 0;
-	while (licznik<wierzcholki - 1) {
+	while (licznik < wierzcholki - 1) {
 		if (Union((*it).second.first, (*it).second.second, helpVec, liczebnosc) == true) {
 			MST.push_back(make_pair((*it).second.first, (*it).second.second));
 			licznik++;
@@ -140,14 +140,14 @@ int GrafMacierz::Kruskal() {
 		}
 		it++;
 	}
-
+	printf("Koszt minimalnego drzewa spinajacego wynosi %d\n", suma);
 	return suma;
 }
 
 vector<short> GrafMacierz::Dijkstry() {
-	set<int, cmp> kopiecMacierz;
+	set<int, cmpMacierz> kopiecMacierz;
 	vector<short> pi(wierzcholki);
-	vector<bool> visited(wierzcholki, false);
+	vector<bool> odwiedzone(wierzcholki, false);
 
 	short MAX = 32767;
 	waga.resize(wierzcholki, MAX);
@@ -162,11 +162,11 @@ vector<short> GrafMacierz::Dijkstry() {
 	{
 		short min = *(kopiecMacierz.begin());
 		kopiecMacierz.erase(kopiecMacierz.begin());
-		visited[min] = true;
+		odwiedzone[min] = true;
 
-		for (int i = 0; i<wierzcholki; i++)
+		for (int i = 0; i < wierzcholki; i++)
 		if (min != i && (*matrix(min, i) != 0))
-		if (visited[i] == false)
+		if (odwiedzone[i] == false)
 		if ((*matrix(min, i) + waga[min]) < waga[i])	{
 			kopiecMacierz.erase(kopiecMacierz.find(i));
 			waga[i] = *matrix(min, i) + waga[min];
@@ -174,9 +174,9 @@ vector<short> GrafMacierz::Dijkstry() {
 			pi[i] = min;
 		}
 	}
-
+	for (int i = 1; i<pi.size(); i++)
+		printf("%d -- %d Waga: %d\n", i + 1, pi[i] + 1, waga[i]);
 	return pi;
-
 }
 
 int GrafMacierz::FordBellman(int _iloscKrawedzi) {
@@ -209,20 +209,20 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 
 	D.resize(wierzcholki);
 
-	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; //D jest tablicą, w której trzymamy "koszt" dotarcia do danego wierzchołka z wierzchołka s. Na początku zakładamy, że dotarcie do reszty wierzchołków jest bardzo drogie
-	D[s] = 0; //ale do wierzchołka s możemy dostać się za darmo
+	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; 
+	D[s] = 0; 
 	for (int i = 1; i <= wierzcholki; i++)
 	{
 		for (int j = 0; j < iloscKrawedzi; j++)
 		{
 			int a = E[j][0], b = E[j][1], c = E[j][2];
-			if (D[a] != MAX_INT && D[a] < D[b] - c) //jeżeli koszt dotarcia do poprzedniego wierzchołka (+7) jest mniejszy niż koszt dostanie się do aktualnego wierzchołka
+			if (D[a] != MAX_INT && D[a] < D[b] - c) 
 			{
-				D[b] = D[a] + c; //to zamieniamy wartości. Należy pamiętać, aby do wartości z wierzchołka poprzedzającego dodać koszt przejścia po krawędzi do aktualnego wierzchołka
+				D[b] = D[a] + c; 
 
-				if (i == wierzcholki) // jeżeli i dojdzie do n i wejdzie do tej pętli znaczy, że odkryliśmy cykl o ujemnej wadze
+				if (i == wierzcholki) 
 				{
-					printf("NIE"); //więc program powinien na so tym poinformować i skończyć swoje działanie
+					printf("blad"); 
 					return 0;
 				}
 			}

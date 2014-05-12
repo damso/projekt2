@@ -13,10 +13,10 @@
 using namespace std;
 
 int losuj(short **tab, int wierzcholki, float gestosc){
-	int edges = (int)(gestosc*wierzcholki*(wierzcholki - 1) / 2);
-	int edgesTemp = edges;
+	int krawedzie = (int)(gestosc * wierzcholki * (wierzcholki - 1) / 2);
+	int krawedzieTemp = krawedzie;
 
-	for (int i = 1; i<wierzcholki; i++) {
+	for (int i = 1; i < wierzcholki; i++) {
 		for (int h = 0; h<i; h++) {
 			tab[i][h] = 0;
 		}
@@ -24,7 +24,7 @@ int losuj(short **tab, int wierzcholki, float gestosc){
 
 	vector<short> vecHelp;
 	vecHelp.push_back(0);
-	while (edges>0) {
+	while (krawedzie > 0) {
 		short x = vecHelp[rand() % (vecHelp.size())];
 		short y = rand() % wierzcholki;
 
@@ -36,12 +36,12 @@ int losuj(short **tab, int wierzcholki, float gestosc){
 		}
 
 		if (x != y && tab[x][y] == 0) {
-			tab[x][y] = rand() % 10000 + 1;;
+			tab[x][y] = rand() % 10 + 1;;
 			vecHelp.push_back(tempY);
-			edges--;
+			krawedzie--;
 		}
 	}
-	return edgesTemp;
+	return krawedzieTemp;
 }
 
 void menuGlowne();
@@ -70,12 +70,13 @@ void menuGlowne(){
 		menuGlowne();
 	}
 }
-GrafMacierz A;
+
 int krawedzie;
-int wierzcholki = 10;
+int wierzcholki = 5;
 float gestosc = 0.3;
 short **tab = new short*[wierzcholki];
 
+GrafMacierz A;
 void menuMacierz(){
 	for (int i = 1; i < wierzcholki; i++)
 		tab[i] = new short[i];
@@ -117,10 +118,12 @@ void menuMacierz(){
 	case '5':
 		//kruskal
 		A.Kruskal();
+		system("pause");
 		menuMacierz();
 	case '6':
 		//dijsktra
 		A.Dijkstry();
+		system("pause");
 		menuMacierz();
 	case '7':
 		//ford-bellman
@@ -172,18 +175,22 @@ void menuLista() {
 	case '4':
 		//prim
 		B.Prim();
+		system("pause");
 		menuLista();
 	case '5':
 		//kruskal
 		B.Kruskal();
+		system("pause");
 		menuLista();
 	case '6':
 		//dijsktra
 		B.Dijkstry();
+		system("pause");
 		menuLista();
 	case '7':
 		//ford-bellman
 		B.FordBellman();
+		system("pause");
 		menuLista();
 	case '8':
 		menuGlowne();
