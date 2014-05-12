@@ -78,7 +78,7 @@ void GrafLista::wypiszGraf() {
 }
 
 int GrafLista::Prim() {
-	set<short, cmp2> kopiec;
+	set<short, cmp2> kopiecLista;
 	vector<short> pi(lista.size());
 	vector<bool> visited(lista.size(), false);
 
@@ -89,22 +89,22 @@ int GrafLista::Prim() {
 	weight[0] = 0;
 
 	for (size_t i = 0; i<lista.size(); i++)
-		kopiec.insert(i);
+		kopiecLista.insert(i);
 
 	int suma = 0;
-	while (kopiec.empty() == false)
+	while (kopiecLista.empty() == false)
 	{
-		short min = *(kopiec.begin());
+		short min = *(kopiecLista.begin());
 		suma += weight[min];
-		kopiec.erase(kopiec.begin());
+		kopiecLista.erase(kopiecLista.begin());
 		visited[min] = true;
 
 		for (size_t i = 0; i<lista[min].size(); i++)
 		if (visited[lista[min][i].first] == false)
 		if (lista[min][i].second < weight[lista[min][i].first]) {
-			kopiec.erase(kopiec.find(lista[min][i].first));
+			kopiecLista.erase(kopiecLista.find(lista[min][i].first));
 			weight[lista[min][i].first] = lista[min][i].second;
-			kopiec.insert(lista[min][i].first);
+			kopiecLista.insert(lista[min][i].first);
 			pi[lista[min][i].first] = min;
 		}
 
@@ -149,7 +149,7 @@ int GrafLista::Kruskal() {
 
 vector<short> GrafLista::Dijkstry() {
 
-	set<short, cmp2> kopiec;
+	set<short, cmp2> kopiecLista;
 	vector<short> pi(lista.size());
 	vector<bool> visited(lista.size(), false);
 
@@ -160,22 +160,22 @@ vector<short> GrafLista::Dijkstry() {
 	weight[0] = 0;
 
 	for (size_t i = 0; i<lista.size(); i++)
-		kopiec.insert(i);
+		kopiecLista.insert(i);
 
 	int suma = 0;
-	while (kopiec.empty() == false)
+	while (kopiecLista.empty() == false)
 	{
-		short min = *(kopiec.begin());
+		short min = *(kopiecLista.begin());
 		suma += weight[min];
-		kopiec.erase(kopiec.begin());
+		kopiecLista.erase(kopiecLista.begin());
 		visited[min] = true;
 
 		for (size_t i = 0; i<lista[min].size(); i++)
 		if (visited[lista[min][i].first] == false)
 		if ((lista[min][i].second + weight[min]) < weight[lista[min][i].first]) {
-			kopiec.erase(kopiec.find(lista[min][i].first));
+			kopiecLista.erase(kopiecLista.find(lista[min][i].first));
 			weight[lista[min][i].first] = weight[min] + lista[min][i].second;
-			kopiec.insert(lista[min][i].first);
+			kopiecLista.insert(lista[min][i].first);
 			pi[lista[min][i].first] = min;
 		}
 
@@ -186,25 +186,25 @@ vector<short> GrafLista::Dijkstry() {
 
 void GrafLista::FordBellman() {
 	short max = 32767;
-	int n, *wynik;
-	bool *change, end=true;
-	n = lista.size();
-	wynik = new int[n];
-	change = new bool[n];
+	int rozmiarListy, *wynik;
+	bool *zmiana, koniec=true;
+	rozmiarListy = lista.size();
+	wynik = new int[rozmiarListy];
+	zmiana = new bool[rozmiarListy];
 	wynik[0] = 0;
 	for (size_t i = 1; i < lista.size(); ++i)
 	{
-		wynik[i] = max; change[i] = false;
+		wynik[i] = max; zmiana[i] = false;
 	}
-	ff(0, wynik, change);
-	while (end == false)
+	ff(0, wynik, zmiana);
+	while (koniec == false)
 	{
-		end = true;
-		for (int k = 0; k < n; ++k)
-		if (change[k] == true)
+		koniec = true;
+		for (int k = 0; k < rozmiarListy; ++k)
+		if (zmiana[k] == true)
 		{
-			ff(k, wynik, change); change[k] = false; end = false;
+			ff(k, wynik, zmiana); zmiana[k] = false; koniec = false;
 		}
 	}
-	delete[]wynik; delete[]change;
+	delete[]wynik; delete[]zmiana;
 }

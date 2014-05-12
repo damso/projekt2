@@ -12,11 +12,11 @@
 
 using namespace std;
 
-int losuj(short **tab, int vertexs, float density){
-	int edges = (int)(density*vertexs*(vertexs - 1) / 2);
+int losuj(short **tab, int wierzcholki, float gestosc){
+	int edges = (int)(gestosc*wierzcholki*(wierzcholki - 1) / 2);
 	int edgesTemp = edges;
 
-	for (int i = 1; i<vertexs; i++) {
+	for (int i = 1; i<wierzcholki; i++) {
 		for (int h = 0; h<i; h++) {
 			tab[i][h] = 0;
 		}
@@ -26,7 +26,7 @@ int losuj(short **tab, int vertexs, float density){
 	vecHelp.push_back(0);
 	while (edges>0) {
 		short x = vecHelp[rand() % (vecHelp.size())];
-		short y = rand() % vertexs;
+		short y = rand() % wierzcholki;
 
 		short tempY = y;
 		if (x<y) {
@@ -35,8 +35,7 @@ int losuj(short **tab, int vertexs, float density){
 			y = temp;
 		}
 
-		if (x != y && tab[x][y] == 0)
-		{
+		if (x != y && tab[x][y] == 0) {
 			tab[x][y] = rand() % 10000 + 1;;
 			vecHelp.push_back(tempY);
 			edges--;
@@ -73,11 +72,12 @@ void menuGlowne(){
 }
 GrafMacierz A;
 int krawedzie;
-int vertexs = 5;
+int wierzcholki = 10;
 float gestosc = 0.3;
-short **tab = new short*[vertexs];
+short **tab = new short*[wierzcholki];
+
 void menuMacierz(){
-	for (int i = 1; i < vertexs; i++)
+	for (int i = 1; i < wierzcholki; i++)
 		tab[i] = new short[i];
 	int wybor;
 	system("cls");
@@ -90,6 +90,7 @@ void menuMacierz(){
 		<< "5. Algorytm Kruskala\n"
 		<< "6. Algorytm Dijkstry\n"
 		<< "7. Algorytm Forda-Bellmana\n"
+		<< "****************************\n"
 		<< "8. Powrot do menu glownego\n"
 		<< "0. Zakoncz\n"
 		<< "-----------------------------------------------\n";
@@ -100,8 +101,8 @@ void menuMacierz(){
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
 	case '2':
 		//generowanie losowe
-		krawedzie = losuj(tab, vertexs, gestosc);
-		A.wpiszGraf(tab, vertexs);
+		krawedzie = losuj(tab, wierzcholki, gestosc);
+		A.wpiszGraf(tab, wierzcholki);
 		menuMacierz();
 	case '3':
 		//wyswietlenie grafu
@@ -111,6 +112,7 @@ void menuMacierz(){
 	case '4':
 		//prim
 		A.Prim();
+		system("pause");
 		menuMacierz();
 	case '5':
 		//kruskal
@@ -134,8 +136,8 @@ void menuMacierz(){
 }
 
 GrafLista B;
-void menuLista(){
-	for (int i = 1; i < vertexs; i++)
+void menuLista() {
+	for (int i = 1; i < wierzcholki; i++)
 		tab[i] = new short[i];
 	int wybor;
 	system("cls");
@@ -148,18 +150,19 @@ void menuLista(){
 		<< "5. Algorytm Kruskala\n"
 		<< "6. Algorytm Dijkstry\n"
 		<< "7. Algorytm Forda-Bellmana\n"
+		<< "****************************\n"
 		<< "8. Powrot do menu glownego\n"
 		<< "0. Zakoncz\n"
 		<< "-----------------------------------------------\n";
 
 	wybor = _getch();
-	switch (wybor){
+	switch (wybor) {
 	case '1':
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
 	case '2':
 		//generowanie losowe
-		krawedzie = losuj(tab, vertexs, gestosc);
-		B.wpiszGraf(tab, vertexs);
+		krawedzie = losuj(tab, wierzcholki, gestosc);
+		B.wpiszGraf(tab, wierzcholki);
 		menuLista();
 	case '3':
 		//wyswietlenie grafu
@@ -194,261 +197,6 @@ void menuLista(){
 int main(int argc, char * const argv[]) {
 
 	menuGlowne();
-
-
-	//ofstream plik;
-	//plik.open("Dane.txt", ios::out);
-
-	//srand(time(0));
-
-	//int vertexs = 200;
-	//float gestosc = 0.5;
-	//const int powtorzenia = 2;
-	//const int maxvertexs = 3000;
-	//const int skok = 200;
-
-	//double czas = 0;
-	//clock_t start, koniec;
-	//GrafMacierz A;
-
-
-	
-	/*
-	plik << "Prim Macierz - 0.9" << endl;
-	while (vertexs<maxvertexs) {
-		for (int i=0; i<powtorzenia; i++) {
-			short **tab = new short*[vertexs];
-			for (int i=1; i<vertexs; i++)
-				tab[i] = new short[i];
-
-			losuj(tab,vertexs,gestosc);
-			A.wpiszGraf(tab,vertexs);
-			start = clock();
-			A.Prim();
-			koniec = clock();
-
-			for (int i=1; i<vertexs; i++) {
-				delete [] tab[i];
-			}
-			delete [] tab;
-
-			czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-		}
-		czas = czas/powtorzenia;
-		plik << vertexs << " " << czas << endl;;
-		vertexs += skok;
-	}
-
-
-	/*
-	czas = 0;
-	vertexs = 500;
-
-	
-	plik << "Kruskal Macierz - 0.9" << endl;
-	while (vertexs<maxvertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Kruskal();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;
-	vertexs += skok;
-	}
-
-	czas = 0;
-	vertexs = 500;
-
-	plik << "Dijkstry Macierz - 0.9" << endl;
-	while (vertexs<maxvertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	A.wpiszGraf(tab,vertexs);
-	start = clock();
-	A.Dijkstry();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-	*/
-	
-	GrafLista B;
-
-	/*
-	plik << "Prim Lista - 0.9" << endl;
-	while (vertexs<maxvertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Prim();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-
-	
-	czas = 0;
-	vertexs = 500;
-	
-	plik << "Kruskal Lista - 0.9" << endl;
-	while (vertexs<maxvertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Kruskal();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-	
-	/*	czas = 0;
-	vertexs = 500;
-
-	plik << "Dijkstry Lista - 0.3" << endl;
-	while (vertexs<maxvertexs) {
-	for (int i=0; i<powtorzenia; i++) {
-	short **tab = new short*[vertexs];
-	for (int i=1; i<vertexs; i++)
-	tab[i] = new short[i];
-
-	losuj(tab,vertexs,gestosc);
-	B.wpiszGraf(tab,vertexs);
-	start = clock();
-	B.Dijkstry();
-	koniec = clock();
-
-	for (int i=1; i<vertexs; i++) {
-	delete [] tab[i];
-	}
-	delete [] tab;
-
-	czas += ((double) (koniec - start)) / CLOCKS_PER_SEC;
-	}
-	czas = czas/powtorzenia;
-	plik << vertexs << " " << czas << endl;;
-	vertexs += skok;
-	}
-	
-
-	gestosc = 0.3;
-	czas = 0;
-	vertexs = 500;
-	
-	
-
-	plik << "Ford Belmann Macierz - 0.5" << endl;
-	while (vertexs<maxvertexs) {
-		for (int i = 0; i<powtorzenia; i++) {
-			short **tab = new short*[vertexs];
-			for (int i = 1; i<vertexs; i++)
-				tab[i] = new short[i];
-
-			int krawedzie = losuj(tab, vertexs, gestosc);
-			A.wpiszGraf(tab, vertexs);
-			start = clock();
-			A.FordBellman(krawedzie);
-			koniec = clock();
-
-			for (int i = 1; i<vertexs; i++) {
-				delete[] tab[i];
-			}
-			delete[] tab;
-
-			czas += ((double)(koniec - start)) / CLOCKS_PER_SEC;
-		}
-		czas = czas / powtorzenia;
-		plik << vertexs << " " << czas << endl;;
-		vertexs += skok;
-	}
-	
-	
-	czas = 0;
-	gestosc = 0.8;
-	vertexs = 500;
-	plik << "Ford Belmann Macierz - 0.8" << endl;
-	while (vertexs<maxvertexs) {
-		for (int i = 0; i<4; i++) {
-			short **tab = new short*[vertexs];
-			for (int i = 1; i<vertexs; i++)
-				tab[i] = new short[i];
-
-			int krawedzie = losuj(tab, vertexs, gestosc);
-			A.wpiszGraf(tab, vertexs);
-			start = clock();
-			A.FordBellman(krawedzie);
-			koniec = clock();
-
-			for (int i = 1; i<vertexs; i++) {
-				delete[] tab[i];
-			}
-			delete[] tab;
-
-			czas += ((double)(koniec - start)) / CLOCKS_PER_SEC;
-		}
-		czas = czas / 4;
-		plik << vertexs << " " << czas << endl;;
-		vertexs += skok;
-	}
-	*/
-
-	//plik.close();
-
-	system("PAUSE");
 	return 0;
 }
 

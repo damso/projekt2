@@ -18,7 +18,6 @@ struct cmp
 	}
 };
 
-//Funkcje pomocnicze
 short* GrafMacierz::matrix(int x, int y) {
 	if (x>y)
 		return &macierz[x][y];
@@ -51,69 +50,69 @@ bool GrafMacierz::Union(short a, short b, short *tab, short *liczebnosc) {
 	return true;
 }
 
-
-//Gettery i Settery
+//wpisywanie i wyswietlanie grafu
 void GrafMacierz::wpiszGraf(short **inputTab, int size) {
-	vertexs = size;
-	macierz = new short*[vertexs];
-	for (int i = 1; i<vertexs; i++)
+	wierzcholki = size;
+	macierz = new short*[wierzcholki];
+	for (int i = 1; i < wierzcholki; i++)
 		macierz[i] = new short[i];
 
-	for (int x = 1; x<vertexs; x++)
-	for (int y = 0; y<x; y++)
+	for (int x = 1; x < wierzcholki; x++)
+	for (int y = 0; y < x; y++)
 		*(matrix(x, y)) = inputTab[x][y];
-	//wypiszGraf();
 }
 
 void GrafMacierz::wypiszGraf() {
-	for (int x = 1; x<vertexs; x++){
-		for (int y = 0; y<x; y++)
+	for (int x = 1; x < wierzcholki; x++){
+		for (int y = 0; y < x; y++)
 			std::cout << macierz[x][y] << " ";
-		std::cout << std::endl;
+		cout << endl;
 	}
 }
 
-
-//Algorytmy
+//zaimplementowane algorytmy
 int GrafMacierz::Prim() {
-	set<short, cmp> kopiec2;
-	vector<short> pi(vertexs);
-	vector<bool> visited(vertexs, false);
+	set<short, cmp> kopiecMacierz;
+	vector<short> pi(wierzcholki);
+	vector<bool> odwiedzone(wierzcholki, false);
 
 	short MAX = 32767;
-	waga.resize(vertexs, MAX);
+	waga.resize(wierzcholki, MAX);
 
 	pi[0] = 0;
 	waga[0] = 0;
 
-	for (short i = 0; i<vertexs; i++)
-		kopiec2.insert(i);
+	for (short i = 0; i < wierzcholki; i++)
+		kopiecMacierz.insert(i);
 
 	int suma = 0;
-	while (kopiec2.empty() == false)
+	while (kopiecMacierz.empty() == false)
 	{
-		short min = *(kopiec2.begin());
+		short min = *(kopiecMacierz.begin());
 		suma += waga[min];
-		kopiec2.erase(kopiec2.begin());
-		visited[min] = true;
+		kopiecMacierz.erase(kopiecMacierz.begin());
+		odwiedzone[min] = true;
 
-		for (int i = 0; i<vertexs; i++)
+		for (int i = 0; i < wierzcholki; i++)
 		if (min != i && (*matrix(min, i) != 0))
-		if (visited[i] == false)
+		if (odwiedzone[i] == false)
 		if (*matrix(min, i) < waga[i])	{
-			kopiec2.erase(kopiec2.find(i));
+			kopiecMacierz.erase(kopiecMacierz.find(i));
 			waga[i] = *matrix(min, i);
-			kopiec2.insert(i);
+			kopiecMacierz.insert(i);
 			pi[i] = min;
 		}
 	}
-
+	printf("Koszt minimalnego drzewa spinajacego wynosi %d\n", suma);
+	printf("Drzewo zlozone jest z nastepujacych krawedzi:\n");
+	for (int i = 1; i<pi.size(); i++) 
+		printf("%d -- %d\n", i + 1, pi[i] + 1);
 	return suma;
 }
 
 int GrafMacierz::Kruskal() {
 	vector< pair< short, pair<short, short> > > krawedzie;
-	for (int x = 1; x<vertexs; x++)
+	for (int x = 1; x<wierzcholki; x++)
 	for (int y = 0; y<x; y++)
 	if (*(matrix(x, y)) != 0)
 		krawedzie.push_back(make_pair(*matrix(x, y), make_pair(x, y)));
@@ -122,10 +121,10 @@ int GrafMacierz::Kruskal() {
 
 	vector< pair<short, short> > MST;
 
-	short *helpVec = new short[vertexs];
-	short *liczebnosc = new short[vertexs];
+	short *helpVec = new short[wierzcholki];
+	short *liczebnosc = new short[wierzcholki];
 
-	for (int i = 0; i<vertexs; i++) {
+	for (int i = 0; i<wierzcholki; i++) {
 		helpVec[i] = i;
 		liczebnosc[i] = 1;
 	}
@@ -133,7 +132,7 @@ int GrafMacierz::Kruskal() {
 	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin();
 
 	int licznik = 0, suma = 0;
-	while (licznik<vertexs - 1) {
+	while (licznik<wierzcholki - 1) {
 		if (Union((*it).second.first, (*it).second.second, helpVec, liczebnosc) == true) {
 			MST.push_back(make_pair((*it).second.first, (*it).second.second));
 			licznik++;
@@ -146,32 +145,32 @@ int GrafMacierz::Kruskal() {
 }
 
 vector<short> GrafMacierz::Dijkstry() {
-	set<int, cmp> kopiec2;
-	vector<short> pi(vertexs);
-	vector<bool> visited(vertexs, false);
+	set<int, cmp> kopiecMacierz;
+	vector<short> pi(wierzcholki);
+	vector<bool> visited(wierzcholki, false);
 
 	short MAX = 32767;
-	waga.resize(vertexs, MAX);
+	waga.resize(wierzcholki, MAX);
 
 	pi[0] = 0;
 	waga[0] = 0;
 
-	for (short i = 0; i<vertexs; i++)
-		kopiec2.insert(i);
+	for (short i = 0; i<wierzcholki; i++)
+		kopiecMacierz.insert(i);
 
-	while (kopiec2.empty() == false)
+	while (kopiecMacierz.empty() == false)
 	{
-		short min = *(kopiec2.begin());
-		kopiec2.erase(kopiec2.begin());
+		short min = *(kopiecMacierz.begin());
+		kopiecMacierz.erase(kopiecMacierz.begin());
 		visited[min] = true;
 
-		for (int i = 0; i<vertexs; i++)
+		for (int i = 0; i<wierzcholki; i++)
 		if (min != i && (*matrix(min, i) != 0))
 		if (visited[i] == false)
 		if ((*matrix(min, i) + waga[min]) < waga[i])	{
-			kopiec2.erase(kopiec2.find(i));
+			kopiecMacierz.erase(kopiecMacierz.find(i));
 			waga[i] = *matrix(min, i) + waga[min];
-			kopiec2.insert(i);
+			kopiecMacierz.insert(i);
 			pi[i] = min;
 		}
 	}
@@ -180,20 +179,20 @@ vector<short> GrafMacierz::Dijkstry() {
 
 }
 
-int GrafMacierz::FordBellman(int iloscKr) {
+int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 	vector<int>D;
 	vector< vector<int> > E;
 
-	int iloscK = iloscKr * 2;
+	int iloscKrawedzi = _iloscKrawedzi * 2;
 	const int MAX_INT = 1000;
 	int s = 1;
 
-	E.resize(iloscK);
+	E.resize(iloscKrawedzi);
 
 	int i = 0;
-	for (int x = 0; x<vertexs; x++)
+	for (int x = 0; x<wierzcholki; x++)
 	{
-		for (int y = 0; y<vertexs; y++)
+		for (int y = 0; y<wierzcholki; y++)
 		{
 			if (x != y)
 			if (*matrix(x, y) != 0)
@@ -208,20 +207,20 @@ int GrafMacierz::FordBellman(int iloscKr) {
 		}
 	}
 
-	D.resize(vertexs);
+	D.resize(wierzcholki);
 
-	for (int i = 1; i < vertexs; i++) D[i] = MAX_INT; //D jest tablicą, w której trzymamy "koszt" dotarcia do danego wierzchołka z wierzchołka s. Na początku zakładamy, że dotarcie do reszty wierzchołków jest bardzo drogie
+	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; //D jest tablicą, w której trzymamy "koszt" dotarcia do danego wierzchołka z wierzchołka s. Na początku zakładamy, że dotarcie do reszty wierzchołków jest bardzo drogie
 	D[s] = 0; //ale do wierzchołka s możemy dostać się za darmo
-	for (int i = 1; i <= vertexs; i++)
+	for (int i = 1; i <= wierzcholki; i++)
 	{
-		for (int j = 0; j < iloscK; j++)
+		for (int j = 0; j < iloscKrawedzi; j++)
 		{
 			int a = E[j][0], b = E[j][1], c = E[j][2];
 			if (D[a] != MAX_INT && D[a] < D[b] - c) //jeżeli koszt dotarcia do poprzedniego wierzchołka (+7) jest mniejszy niż koszt dostanie się do aktualnego wierzchołka
 			{
 				D[b] = D[a] + c; //to zamieniamy wartości. Należy pamiętać, aby do wartości z wierzchołka poprzedzającego dodać koszt przejścia po krawędzi do aktualnego wierzchołka
 
-				if (i == vertexs) // jeżeli i dojdzie do n i wejdzie do tej pętli znaczy, że odkryliśmy cykl o ujemnej wadze
+				if (i == wierzcholki) // jeżeli i dojdzie do n i wejdzie do tej pętli znaczy, że odkryliśmy cykl o ujemnej wadze
 				{
 					printf("NIE"); //więc program powinien na so tym poinformować i skończyć swoje działanie
 					return 0;
