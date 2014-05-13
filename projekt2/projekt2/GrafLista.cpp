@@ -8,6 +8,9 @@
 using namespace std;
 
 vector<short> weight;
+
+
+//struktura porownujaca wagi. Jezeli waga jest wieksza zwraca false
 struct cmpLista
 {
 	bool operator() (const short &a, const short &b)
@@ -18,10 +21,10 @@ struct cmpLista
 	}
 };
 
+//metoda potrzebna do implementacji algorytmu Forda
 void GrafLista::ff(int k, int *wynik, bool *change)
 {
 	short max = 32767;
-	//int i;
 	for (size_t i = 0; i < lista[k].size(); ++i)
 	{
 		if (lista[k][i].second != 0)
@@ -32,7 +35,7 @@ void GrafLista::ff(int k, int *wynik, bool *change)
 	}
 }
 
-
+//rekurencyjna metoda szukajaca. Zwraca reprezentanta zbioru
 short GrafLista::Find(short a, short *tab) {
 	if (tab[a] == a) return a; 
 	short fa = Find(tab[a], tab);
@@ -40,6 +43,7 @@ short GrafLista::Find(short a, short *tab) {
 	return fa;
 }
 
+//metoda na potrzebny algorytmu Kruskala. £¹czy dwa zbiory. Union-Find-Problem
 bool GrafLista::Union(short a, short b, short *tab, short *liczebnosc) {
 	short fa = Find(a, tab); 
 	short fb = Find(b, tab); 
@@ -58,12 +62,13 @@ bool GrafLista::Union(short a, short b, short *tab, short *liczebnosc) {
 	return true;
 }
 
+//metoda wpsujaca graf do Listy
 void GrafLista::wpiszGraf(short **inputTab, int size) {
-	lista.resize(size);
+	lista.resize(size); //zwiekszamy w zaleznosci od rozmiaru
 	for (int x = 1; x < size; x++)
 	for (int y = 0; y < x; y++) {
 		if (inputTab[x][y] != 0) {
-			lista[x].push_back(make_pair(y, inputTab[x][y]));
+			lista[x].push_back(make_pair(y, inputTab[x][y])); //pary
 			lista[y].push_back(make_pair(x, inputTab[x][y]));
 		}
 	}
@@ -76,6 +81,7 @@ void GrafLista::wypiszGraf() {
 		printf("%d -- %d Waga: %d\n", x+1, lista[x][y].first+1, lista[x][y].second);
 }
 
+//algorytm Prima
 int GrafLista::Prim() {
 	set<short, cmpLista> kopiecLista;
 	vector<short> pi(lista.size());
@@ -115,6 +121,7 @@ int GrafLista::Prim() {
 	return suma;
 }
 
+//algorytm Kruskala
 int GrafLista::Kruskal() {
 	vector< pair< short, pair<short, short> > >krawedzie;
 	for (size_t x = 0; x < lista.size(); x++)
@@ -134,7 +141,7 @@ int GrafLista::Kruskal() {
 		liczebnosc[i] = 1;
 	}
 
-	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin();
+	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin(); //iterator do poruszania sie po krawedziach
 
 	size_t licznik = 0, suma = 0;
 	while (licznik<lista.size() - 1) {
@@ -149,6 +156,7 @@ int GrafLista::Kruskal() {
 	return suma;
 }
 
+//Algorytm Dijkstry
 vector<short> GrafLista::Dijkstry() {
 
 	set<short, cmpLista> kopiecLista;
@@ -187,6 +195,7 @@ vector<short> GrafLista::Dijkstry() {
 	return pi;
 }
 
+//Algorytm Bellmana
 void GrafLista::FordBellman() {
 	short max = 32767;
 	int rozmiarListy, *wynik;
@@ -206,8 +215,11 @@ void GrafLista::FordBellman() {
 		for (int k = 0; k < rozmiarListy; ++k)
 		if (zmiana[k] == true)
 		{
-			ff(k, wynik, zmiana); zmiana[k] = false; koniec = false;
+			ff(k, wynik, zmiana);
+			zmiana[k] = false; 
+			koniec = false;
 		}
 	}
-	delete[]wynik; delete[]zmiana;
+	delete[]wynik; 
+	delete[]zmiana;
 }

@@ -8,6 +8,8 @@
 using namespace std;
 
 vector<short> waga;
+
+//Metoda porownuje wagi
 struct cmpMacierz
 {
 	bool operator() (const short &a, const short &b)
@@ -18,6 +20,7 @@ struct cmpMacierz
 	}
 };
 
+//Sprawdzam która zmienna jest wieksza.
 short* GrafMacierz::matrix(int x, int y) {
 	if (x>y)
 		return &macierz[x][y];
@@ -25,6 +28,8 @@ short* GrafMacierz::matrix(int x, int y) {
 		return &macierz[y][x];
 }
 
+//Dla potrzebn Kruskala
+//Kto jest reprezentantem zbioru
 short GrafMacierz::Find(short a, short *tab) {
 	if (tab[a] == a) return a;
 	short fa = Find(tab[a], tab);
@@ -190,25 +195,21 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 	E.resize(iloscKrawedzi);
 
 	int i = 0;
-	for (int x = 0; x<wierzcholki; x++)
-	{
-		for (int y = 0; y<wierzcholki; y++)
-		{
+	for (int x = 0; x<wierzcholki; x++){
+		for (int y = 0; y<wierzcholki; y++){
 			if (x != y)
-			if (*matrix(x, y) != 0)
-			{
+			if (*matrix(x, y) != 0){
 				E[i].reserve(3);
 				E[i][0] = y + 1;
 				E[i][1] = x + 1;
 				E[i][2] = *matrix(x, y);
 				i++;
 			}
-
 		}
 	}
 
 	D.resize(wierzcholki);
-
+	//Koszt dotarcia do danego wierzcho³ka
 	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; 
 	D[s] = 0; 
 	for (int i = 1; i <= wierzcholki; i++)
@@ -222,7 +223,7 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 
 				if (i == wierzcholki) 
 				{
-					printf("blad"); 
+					printf("Uwaga!. Cykl o ujemnej wadze. Nic dalej nie moge zrobic"); 
 					return 0;
 				}
 			}
