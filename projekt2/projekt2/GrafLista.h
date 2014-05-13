@@ -7,7 +7,7 @@ class GrafLista {
 	//Funkcja pomocnicza do Forda
 	void ff(int k, int *wynik, bool *change);
 
-	//Union-Find
+	//Na potrzebny Kruskala
 	short Find(short a, short *tab);
 	bool Union(short a, short b, short *tab, short *liczebnosc);
 public:

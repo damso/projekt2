@@ -9,8 +9,62 @@
 #include <fstream>
 #include <time.h>
 #include <conio.h>
+#include <windows.h>
+#include <iomanip>
 
 using namespace std;
+
+//inicjalizacja licznika
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+int c;
+LARGE_INTEGER performanceCountStart, performanceCountEnd;
+
+void StartCounter()
+{
+	LARGE_INTEGER li;
+	if (!QueryPerformanceFrequency(&li))
+		cout << "QueryPerformanceFrequency failed!\n";
+
+	PCFreq = double(li.QuadPart) / 1000.0;
+
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+
+double GetCounter()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
+
+//koniec licznika
+vector<int> liczby;
+int buduj_graf(){
+	
+	int ilosc, i = 0;
+	fstream plik;
+	plik.open("1.txt", std::ios::in | std::ios::out);
+
+	if (plik.good() == true){
+		while (!plik.eof()){
+			plik>>ilosc;
+			liczby.push_back(ilosc);
+		}
+		plik.close();
+		return 0;
+	}
+	else return -1;
+}
+
+void wektor(){
+	for (int i = 0; i < liczby.size(); i++){
+		cout << liczby[i] << endl;
+	}
+
+}
 
 int losuj(short **tab, int wierzcholki, float gestosc){
 	int edges = (int)(gestosc*wierzcholki*(wierzcholki - 1) / 2);
@@ -98,7 +152,11 @@ void menuMacierz(){
 	wybor = _getch();
 	switch (wybor){
 	case '1':
+		buduj_graf();
+		wektor();
+		menuMacierz();
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
+		//wczytywanie pliku nie skonczone :(
 	case '2':
 		//generowanie losowe
 		krawedzie = losuj(tab, wierzcholki, gestosc);
@@ -160,6 +218,11 @@ void menuLista() {
 	wybor = _getch();
 	switch (wybor) {
 	case '1':
+		buduj_graf();
+		wektor();
+		menuMacierz();
+		//tutaj jaka funkcja, ktora wczyta graf z pliku
+		//wczytywanie pliku nie skonczone :(
 		//tutaj jaka funkcja, ktora wczyta graf z pliku
 	case '2':
 		//generowanie losowe

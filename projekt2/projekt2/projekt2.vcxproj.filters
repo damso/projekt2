@@ -72,4 +72,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\sdizoSprawko2.docx">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\wynik.xlsx">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
