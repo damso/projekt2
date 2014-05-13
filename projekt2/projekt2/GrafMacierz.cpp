@@ -8,6 +8,8 @@
 using namespace std;
 
 vector<short> waga;
+
+//Metoda porownuje wagi
 struct cmp
 {
 	bool operator() (const short &a, const short &b)
@@ -17,7 +19,7 @@ struct cmp
 		return a<b;
 	}
 };
-
+//Sprawdzam która zmienna jest wieksza.
 short* GrafMacierz::matrix(int x, int y) {
 	if (x>y)
 		return &macierz[x][y];
@@ -25,6 +27,8 @@ short* GrafMacierz::matrix(int x, int y) {
 		return &macierz[y][x];
 }
 
+//Dla potrzeb Kruskala
+//Kto jest reprezentantem zbioru
 short GrafMacierz::Find(short a, short *tab) {
 	if (tab[a] == a) return a;
 	short fa = Find(tab[a], tab);
@@ -185,7 +189,7 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 	vector< vector<int> > E;
 
 	int iloscKrawedzi = _iloscKrawedzi * 2;
-	const int MAX_INT = 1000;
+	const int MAX_INT = 1000;//zalozenie nieskonczonosci
 	int s = 1;
 
 	E.resize(iloscKrawedzi);
@@ -209,26 +213,31 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 	}
 
 	D.resize(wierzcholki);
-
-	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; //D jest tablic¹, w której trzymamy "koszt" dotarcia do danego wierzcho³ka z wierzcho³ka s. Na pocz¹tku zak³adamy, ¿e dotarcie do reszty wierzcho³ków jest bardzo drogie
-	D[s] = 0; //ale do wierzcho³ka s mo¿emy dostaæ siê za darmo
+	//Koszt dotarcia do danego wierzcho³ka
+	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; 
+	D[s] = 0; 
 	for (int i = 1; i <= wierzcholki; i++)
 	{
 		for (int j = 0; j < iloscKrawedzi; j++)
 		{
 			int a = E[j][0], b = E[j][1], c = E[j][2];
-			if (D[a] != MAX_INT && D[a] < D[b] - c) //je¿eli koszt dotarcia do poprzedniego wierzcho³ka (+7) jest mniejszy ni¿ koszt dostanie siê do aktualnego wierzcho³ka
+			if (D[a] != MAX_INT && D[a] < D[b] - c) 
 			{
-				D[b] = D[a] + c; //to zamieniamy wartoœci. Nale¿y pamiêtaæ, aby do wartoœci z wierzcho³ka poprzedzaj¹cego dodaæ koszt przejœcia po krawêdzi do aktualnego wierzcho³ka
+				D[b] = D[a] + c;
 
-				if (i == wierzcholki) // je¿eli i dojdzie do n i wejdzie do tej pêtli znaczy, ¿e odkryliœmy cykl o ujemnej wadze
+				if (i == wierzcholki) 
 				{
-					printf("NIE"); //wiêc program powinien na so tym poinformowaæ i skoñczyæ swoje dzia³anie
+					printf("Uwaga!. Cykl o ujemnej wadze. Nic dalej nie moge zrobic"); 
 					return 0;
 				}
 			}
 		}
 	}
 
+	//wypisywanie wyniku na ekran
+	for (int i = 0; i < wierzcholki; i++)
+	{
+		if (i != s && D[i]<MAX_INT) printf("%d %d\n", i, D[i]);
+	}
 	return 0;
 }

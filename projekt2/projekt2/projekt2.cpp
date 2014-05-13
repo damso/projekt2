@@ -184,7 +184,7 @@ void menuMacierz(){
 		menuMacierz();
 	case '7':
 		//ford-bellman
-		//A.FordBellman(krawedzie);
+		A.FordBellman(krawedzie);
 		menuMacierz();
 	case '8':
 		menuGlowne();
