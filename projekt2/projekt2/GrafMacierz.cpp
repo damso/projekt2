@@ -8,7 +8,7 @@
 using namespace std;
 
 vector<short> waga;
-struct cmpMacierz
+struct cmp
 {
 	bool operator() (const short &a, const short &b)
 	{
@@ -65,14 +65,14 @@ void GrafMacierz::wpiszGraf(short **inputTab, int size) {
 void GrafMacierz::wypiszGraf() {
 	for (int x = 1; x < wierzcholki; x++){
 		for (int y = 0; y < x; y++)
-			cout << macierz[x][y] + 1<< " ";
+			std::cout << macierz[x][y] << " ";
 		cout << endl;
 	}
 }
 
 //zaimplementowane algorytmy
 int GrafMacierz::Prim() {
-	set<short, cmpMacierz> kopiecMacierz;
+	set<short, cmp> kopiecMacierz;
 	vector<short> pi(wierzcholki);
 	vector<bool> odwiedzone(wierzcholki, false);
 
@@ -105,15 +105,15 @@ int GrafMacierz::Prim() {
 	}
 	printf("Koszt minimalnego drzewa spinajacego wynosi %d\n", suma);
 	printf("Drzewo zlozone jest z nastepujacych krawedzi:\n");
-	for (int i = 1; i<pi.size(); i++) 
+	for (int i = 1; i<pi.size(); i++)
 		printf("%d -- %d\n", i + 1, pi[i] + 1);
 	return suma;
 }
 
 int GrafMacierz::Kruskal() {
 	vector< pair< short, pair<short, short> > > krawedzie;
-	for (int x = 1; x < wierzcholki; x++)
-	for (int y = 0; y < x; y++)
+	for (int x = 1; x<wierzcholki; x++)
+	for (int y = 0; y<x; y++)
 	if (*(matrix(x, y)) != 0)
 		krawedzie.push_back(make_pair(*matrix(x, y), make_pair(x, y)));
 
@@ -124,7 +124,7 @@ int GrafMacierz::Kruskal() {
 	short *helpVec = new short[wierzcholki];
 	short *liczebnosc = new short[wierzcholki];
 
-	for (int i = 0; i < wierzcholki; i++) {
+	for (int i = 0; i<wierzcholki; i++) {
 		helpVec[i] = i;
 		liczebnosc[i] = 1;
 	}
@@ -132,7 +132,7 @@ int GrafMacierz::Kruskal() {
 	vector< pair<short, pair<short, short> > >::iterator it = krawedzie.begin();
 
 	int licznik = 0, suma = 0;
-	while (licznik < wierzcholki - 1) {
+	while (licznik<wierzcholki - 1) {
 		if (Union((*it).second.first, (*it).second.second, helpVec, liczebnosc) == true) {
 			MST.push_back(make_pair((*it).second.first, (*it).second.second));
 			licznik++;
@@ -145,9 +145,9 @@ int GrafMacierz::Kruskal() {
 }
 
 vector<short> GrafMacierz::Dijkstry() {
-	set<int, cmpMacierz> kopiecMacierz;
+	set<int, cmp> kopiecMacierz;
 	vector<short> pi(wierzcholki);
-	vector<bool> odwiedzone(wierzcholki, false);
+	vector<bool> visited(wierzcholki, false);
 
 	short MAX = 32767;
 	waga.resize(wierzcholki, MAX);
@@ -162,11 +162,11 @@ vector<short> GrafMacierz::Dijkstry() {
 	{
 		short min = *(kopiecMacierz.begin());
 		kopiecMacierz.erase(kopiecMacierz.begin());
-		odwiedzone[min] = true;
+		visited[min] = true;
 
-		for (int i = 0; i < wierzcholki; i++)
+		for (int i = 0; i<wierzcholki; i++)
 		if (min != i && (*matrix(min, i) != 0))
-		if (odwiedzone[i] == false)
+		if (visited[i] == false)
 		if ((*matrix(min, i) + waga[min]) < waga[i])	{
 			kopiecMacierz.erase(kopiecMacierz.find(i));
 			waga[i] = *matrix(min, i) + waga[min];
@@ -177,6 +177,7 @@ vector<short> GrafMacierz::Dijkstry() {
 	for (int i = 1; i<pi.size(); i++)
 		printf("%d -- %d Waga: %d\n", i + 1, pi[i] + 1, waga[i]);
 	return pi;
+
 }
 
 int GrafMacierz::FordBellman(int _iloscKrawedzi) {
@@ -209,20 +210,20 @@ int GrafMacierz::FordBellman(int _iloscKrawedzi) {
 
 	D.resize(wierzcholki);
 
-	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; 
-	D[s] = 0; 
+	for (int i = 1; i < wierzcholki; i++) D[i] = MAX_INT; //D jest tablic¹, w której trzymamy "koszt" dotarcia do danego wierzcho³ka z wierzcho³ka s. Na pocz¹tku zak³adamy, ¿e dotarcie do reszty wierzcho³ków jest bardzo drogie
+	D[s] = 0; //ale do wierzcho³ka s mo¿emy dostaæ siê za darmo
 	for (int i = 1; i <= wierzcholki; i++)
 	{
 		for (int j = 0; j < iloscKrawedzi; j++)
 		{
 			int a = E[j][0], b = E[j][1], c = E[j][2];
-			if (D[a] != MAX_INT && D[a] < D[b] - c) 
+			if (D[a] != MAX_INT && D[a] < D[b] - c) //je¿eli koszt dotarcia do poprzedniego wierzcho³ka (+7) jest mniejszy ni¿ koszt dostanie siê do aktualnego wierzcho³ka
 			{
-				D[b] = D[a] + c; 
+				D[b] = D[a] + c; //to zamieniamy wartoœci. Nale¿y pamiêtaæ, aby do wartoœci z wierzcho³ka poprzedzaj¹cego dodaæ koszt przejœcia po krawêdzi do aktualnego wierzcho³ka
 
-				if (i == wierzcholki) 
+				if (i == wierzcholki) // je¿eli i dojdzie do n i wejdzie do tej pêtli znaczy, ¿e odkryliœmy cykl o ujemnej wadze
 				{
-					printf("blad"); 
+					printf("NIE"); //wiêc program powinien na so tym poinformowaæ i skoñczyæ swoje dzia³anie
 					return 0;
 				}
 			}

@@ -13,10 +13,10 @@
 using namespace std;
 
 int losuj(short **tab, int wierzcholki, float gestosc){
-	int krawedzie = (int)(gestosc * wierzcholki * (wierzcholki - 1) / 2);
-	int krawedzieTemp = krawedzie;
+	int edges = (int)(gestosc*wierzcholki*(wierzcholki - 1) / 2);
+	int edgesTemp = edges;
 
-	for (int i = 1; i < wierzcholki; i++) {
+	for (int i = 1; i<wierzcholki; i++) {
 		for (int h = 0; h<i; h++) {
 			tab[i][h] = 0;
 		}
@@ -24,7 +24,7 @@ int losuj(short **tab, int wierzcholki, float gestosc){
 
 	vector<short> vecHelp;
 	vecHelp.push_back(0);
-	while (krawedzie > 0) {
+	while (edges>0) {
 		short x = vecHelp[rand() % (vecHelp.size())];
 		short y = rand() % wierzcholki;
 
@@ -38,10 +38,10 @@ int losuj(short **tab, int wierzcholki, float gestosc){
 		if (x != y && tab[x][y] == 0) {
 			tab[x][y] = rand() % 10 + 1;;
 			vecHelp.push_back(tempY);
-			krawedzie--;
+			edges--;
 		}
 	}
-	return krawedzieTemp;
+	return edgesTemp;
 }
 
 void menuGlowne();
@@ -70,13 +70,12 @@ void menuGlowne(){
 		menuGlowne();
 	}
 }
-
+GrafMacierz A;
 int krawedzie;
-int wierzcholki = 5;
+int wierzcholki = 10;
 float gestosc = 0.3;
 short **tab = new short*[wierzcholki];
 
-GrafMacierz A;
 void menuMacierz(){
 	for (int i = 1; i < wierzcholki; i++)
 		tab[i] = new short[i];

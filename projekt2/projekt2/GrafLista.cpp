@@ -8,7 +8,7 @@
 using namespace std;
 
 vector<short> weight;
-struct cmpLista
+struct cmp2
 {
 	bool operator() (const short &a, const short &b)
 	{
@@ -34,17 +34,18 @@ void GrafLista::ff(int k, int *wynik, bool *change)
 
 
 short GrafLista::Find(short a, short *tab) {
-	if (tab[a] == a) return a; 
+	if (tab[a] == a) return a; // jesli a jest reprezentantem zbioru zawierajacego a to zwracamy a
+	// W przeciwnym wypadku pytamy sie kto jest reprezentantem zbioru zawierajacego tab[a], bo w koncu to ten sam zbior :-)
 	short fa = Find(tab[a], tab);
-	tab[a] = fa; 
+	tab[a] = fa; // zaktualizujmy wartosc tab[a] na nowsz¹!, w razie czego, gdyby ktoœ siê pyta³ kiedyœ jeszcze raz o find(a)
 	return fa;
 }
 
 bool GrafLista::Union(short a, short b, short *tab, short *liczebnosc) {
-	short fa = Find(a, tab); 
-	short fb = Find(b, tab); 
+	short fa = Find(a, tab); // szukaj reprezentanta zbioru zawieraj¹cego element 'a'
+	short fb = Find(b, tab); // szukaj reprezentanta zbioru zawieraj¹cego element 'b'
 
-	if (fa == fb) return false; 
+	if (fa == fb) return false; // nie trzeba nic ³¹czyæ
 	if (liczebnosc[fa] <= liczebnosc[fb])
 	{
 		liczebnosc[fb] += liczebnosc[fa];
@@ -60,26 +61,26 @@ bool GrafLista::Union(short a, short b, short *tab, short *liczebnosc) {
 
 void GrafLista::wpiszGraf(short **inputTab, int size) {
 	lista.resize(size);
-	for (int x = 1; x < size; x++)
-	for (int y = 0; y < x; y++) {
+	for (int x = 1; x<size; x++)
+	for (int y = 0; y<x; y++) {
 		if (inputTab[x][y] != 0) {
 			lista[x].push_back(make_pair(y, inputTab[x][y]));
 			lista[y].push_back(make_pair(x, inputTab[x][y]));
 		}
 	}
+	//wypiszGraf();
 }
 
 void GrafLista::wypiszGraf() {
-	for (size_t x = 0; x < lista.size(); x++)
-	for (size_t y = 0; y < lista[x].size(); y++)
-		//cout << x << " -- " << lista[x][y].first << " Waga: " << lista[x][y].second << endl;
-		printf("%d -- %d Waga: %d\n", x+1, lista[x][y].first+1, lista[x][y].second);
+	for (size_t x = 0; x<lista.size(); x++)
+	for (size_t y = 0; y<lista[x].size(); y++)
+		printf("%d -- %d Waga: %d\n", x + 1, lista[x][y].first + 1, lista[x][y].second);
 }
 
 int GrafLista::Prim() {
-	set<short, cmpLista> kopiecLista;
+	set<short, cmp2> kopiecLista;
 	vector<short> pi(lista.size());
-	vector<bool> odwiedzone(lista.size(), false);
+	vector<bool> visited(lista.size(), false);
 
 	short MAX = 32767;
 	weight.resize(lista.size(), MAX);
@@ -96,10 +97,10 @@ int GrafLista::Prim() {
 		short min = *(kopiecLista.begin());
 		suma += weight[min];
 		kopiecLista.erase(kopiecLista.begin());
-		odwiedzone[min] = true;
+		visited[min] = true;
 
 		for (size_t i = 0; i<lista[min].size(); i++)
-		if (odwiedzone[lista[min][i].first] == false)
+		if (visited[lista[min][i].first] == false)
 		if (lista[min][i].second < weight[lista[min][i].first]) {
 			kopiecLista.erase(kopiecLista.find(lista[min][i].first));
 			weight[lista[min][i].first] = lista[min][i].second;
@@ -111,14 +112,14 @@ int GrafLista::Prim() {
 	printf("Koszt minimalnego drzewa spinajacego wynosi %d\n", suma);
 	printf("Drzewo zlozone jest z nastepujacych krawedzi:\n");
 	for (int i = 1; i<pi.size(); i++)
-		printf("%d -- %d\n", i+1, pi[i]+1);
+		printf("%d -- %d\n", i + 1, pi[i] + 1);
 	return suma;
 }
 
 int GrafLista::Kruskal() {
 	vector< pair< short, pair<short, short> > >krawedzie;
-	for (size_t x = 0; x < lista.size(); x++)
-	for (size_t y = 0; y < lista[x].size(); y++) {
+	for (size_t x = 0; x<lista.size(); x++)
+	for (size_t y = 0; y<lista[x].size(); y++) {
 		krawedzie.push_back(make_pair(lista[x][y].second, make_pair(x, lista[x][y].first)));
 	}
 
@@ -129,7 +130,7 @@ int GrafLista::Kruskal() {
 	short *helpVec = new short[lista.size()];
 	short *liczebnosc = new short[lista.size()];
 
-	for (size_t i = 0; i < lista.size(); i++) {
+	for (size_t i = 0; i<lista.size(); i++) {
 		helpVec[i] = i;
 		liczebnosc[i] = 1;
 	}
@@ -151,9 +152,9 @@ int GrafLista::Kruskal() {
 
 vector<short> GrafLista::Dijkstry() {
 
-	set<short, cmpLista> kopiecLista;
+	set<short, cmp2> kopiecLista;
 	vector<short> pi(lista.size());
-	vector<bool> odwiedzone(lista.size(), false);
+	vector<bool> visited(lista.size(), false);
 
 	short MAX = 32767;
 	weight.resize(lista.size(), MAX);
@@ -170,10 +171,10 @@ vector<short> GrafLista::Dijkstry() {
 		short min = *(kopiecLista.begin());
 		suma += weight[min];
 		kopiecLista.erase(kopiecLista.begin());
-		odwiedzone[min] = true;
+		visited[min] = true;
 
-		for (size_t i = 0; i < lista[min].size(); i++)
-		if (odwiedzone[lista[min][i].first] == false)
+		for (size_t i = 0; i<lista[min].size(); i++)
+		if (visited[lista[min][i].first] == false)
 		if ((lista[min][i].second + weight[min]) < weight[lista[min][i].first]) {
 			kopiecLista.erase(kopiecLista.find(lista[min][i].first));
 			weight[lista[min][i].first] = weight[min] + lista[min][i].second;
@@ -183,14 +184,14 @@ vector<short> GrafLista::Dijkstry() {
 
 	}
 	for (int i = 1; i<pi.size(); i++)
-		printf("%d -- %d Waga: %d\n", i+1, pi[i]+1, weight[i]);
+		printf("%d -- %d Waga: %d\n", i + 1, pi[i] + 1, weight[i]);
 	return pi;
 }
 
 void GrafLista::FordBellman() {
 	short max = 32767;
 	int rozmiarListy, *wynik;
-	bool *zmiana, koniec=true;
+	bool *zmiana, koniec = true;
 	rozmiarListy = lista.size();
 	wynik = new int[rozmiarListy];
 	zmiana = new bool[rozmiarListy];
